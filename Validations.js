@@ -66,6 +66,15 @@ class Validation {
         return true
     }
 
+    static isValidBalance = (param) => {
+
+        if (typeof param !== 'number' ||
+            !isFinite(param) ||
+            param < -200) {
+            return false
+        }
+        return true
+    }
 }
 
 module.exports = Validation;

@@ -35,10 +35,10 @@ app.init = async () => {
     console.log('');
     const account1 = await Accounts.create(conn, 1, 100);
     console.log(account1);
-    const account2 = await Accounts.create(conn, 1, 100);
+    const account2 = await Accounts.create(conn, 1, 800);
     console.log(account2);
-    //const account3 = await Accounts.create(conn, 3, 30);
-    //console.log(account3);
+    const account3 = await Accounts.create(conn, 3, 1500);
+    console.log(account3);
     //const account4 = await Accounts.create(conn, 4, 40);
     //console.log(account4);
     //const account5 = await Accounts.create(conn, 5, 200);
@@ -50,26 +50,30 @@ app.init = async () => {
     console.log(add1);
     const add2 = await Accounts.addAmountById(conn, 3, 1000);
     console.log(add2);
+    const add3 = await Accounts.addAmountById(conn, 6, 5000);
+    console.log(add3);
 
     console.log('');
-    const reduce1 = await Accounts.reduceAmountById(conn, 1, 100);
-    console.log(reduce1);
-    const reduce2 = await Accounts.reduceAmountById(conn, 3, 300);
-    console.log(reduce2);
+    //const reduce1 = await Accounts.reduceAmountById(conn, 1, 100);
+    //console.log(reduce1);
+    //const reduce2 = await Accounts.reduceAmountById(conn, 3, 300);
+    //console.log(reduce2);
 
     console.log('');
-    const transfer1 = await Accounts.transfer(conn, 1, 3, 50);
-    console.log(transfer1);
-    const transfer2 = await Accounts.transfer(conn, 1, 7, 200);
-    console.log(transfer2);
+    //const transfer1 = await Accounts.transfer(conn, 9, 1, 500);
+    //console.log(transfer1);
+    //const transfer2 = await Accounts.transfer(conn, 9, 2, 200);
+    //console.log(transfer2);
 
     console.log('');
-    const delete1 = await Accounts.delete(conn, 4);
-    console.log(delete1);
-    const delete2 = await Accounts.delete(conn, 1);
-    console.log(delete2);
-    const delete3 = await Accounts.delete(conn, 8);
-    console.log(delete3);
+    //const delete1 = await Accounts.delete(conn, 4);
+    //console.log(delete1);
+    //const delete2 = await Accounts.delete(conn, 1);
+    //console.log(delete2);
+    //const delete3 = await Accounts.delete(conn, 8);
+    //console.log(delete3);
+
+
 }
 
 app.init();

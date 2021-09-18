@@ -40,17 +40,19 @@ Users.create = async (connection, userFirstname, userLastname) => {
  */
 Users.updateSurnameById = async (connection, userId, userLastname) => {
     //VALIDATIONS
-    /*if (!Validation.IDisValid(userId)) {
+    if (!Validation.IDisValid(userId)) {
         return `Vartotojo ID turi buti teigiamas sveikasis skaicius!`;
     }
     if (!Validation.isText(userLastname)) {
         return `Parametras turi buti ne tuscias tekstas!`;
-    }*/
+    }
 
     const sql = 'UPDATE users SET lastname = "' + userLastname + '" WHERE users.id =' + userId;
     [rows] = await connection.execute(sql);
     const updatedSurnameById = `User with ID ${userId} has a new surname now as "${userLastname}."`
     return updatedSurnameById;
 }
+
+
 
 module.exports = Users;

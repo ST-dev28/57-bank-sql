@@ -14,6 +14,13 @@ const Accounts = {};
 */
 Accounts.create = async (connection, userId, balance) => {
     //VALIDATIONS
+    if (!Validation.IDisValid(userId)) {
+        return `Vartotojo ID turi buti teigiamas sveikasis skaicius!`;
+    }
+    /*if (!Validation.isValidBalance(balance)) {
+        return `Balansas negali buti mazesnis uz nustatyta limita!`;
+    }*/
+
     const sql = 'INSERT INTO `accounts`\
             (`id`, `userId`,`balance`)\
                 VALUES (NULL, "' + userId + '", "' + balance + '")';
@@ -33,9 +40,6 @@ Accounts.addAmountById = async (connection, accountId, amount) => {
     if (!Validation.IDisValid(accountId)) {
         return `Saskaitos ID turi buti teigiamas sveikasis skaicius!`;
     }
-    if (!Validation.isValidAmount(amount)) {
-        return `Suma turi buti teigiamas skaicius`;
-    }
 
     const sql = 'UPDATE `accounts` SET `balance` = `balance` + "' + amount + '" WHERE `accounts`.`id` = ' + accountId;
     [rows] = await connection.execute(sql);
@@ -54,9 +58,6 @@ Accounts.reduceAmountById = async (connection, accountId, amount) => {
     if (!Validation.IDisValid(accountId)) {
         return `Saskaitos ID turi buti teigiamas sveikasis skaicius!`;
     }
-    if (!Validation.isValidAmount(amount)) {
-        return `Suma turi buti teigiamas skaicius`;
-    }
 
     const sql = 'UPDATE `accounts` SET `balance` = `balance` - "' + amount + '" WHERE `accounts`.`id` = ' + accountId;
     [rows] = await connection.execute(sql);
@@ -73,9 +74,6 @@ Accounts.reduceAmountById = async (connection, accountId, amount) => {
 */
 Accounts.transfer = async (connection, fromAccountId, toAccountId, amount) => {
     //VALIDATIONS
-    if (!Validation.isValidAmount(amount)) {
-        return `Suma turi buti teigiamas skaicius`;
-    }
 
     const from = 'UPDATE `accounts` SET\
      `balance` = `balance` - "' + amount + '"\
@@ -108,7 +106,7 @@ Accounts.delete = async (connection, accountId) => {
     const balance = rows[0].balance;
 
     if (balance > 0 || balance < 0) {
-        return `Accous's ${accountId} balance is ${balance} and it cant be deleted.`
+        return `Accous's ${accountId} balance is ${balance} and it cant be deleted.`;
     }
     else {
         const sql1 = 'DELETE FROM `accounts`\

@@ -74,16 +74,15 @@ Users.delete = async (connection, userId) => {
 
     // tikrinam ar bent vienoje vartotojo saskaitoje yra pinigu
     if (rows.some(row => row.balance > 0)) {
-        return `User ${userId} cant be deleted cause the balance is not 0.`
+        return `User ID ${userId} cant be deleted cause the balance is not 0.`
     }
 
     // jei saskaitos be likucio, tada trinam
     for (let i = 0; i < rows.length; i++) {
         let account = rows[i];
-        console.log(rows[i]);
         const status = await Accounts.delete(connection, account.accountId);
     }
-    return `User ${userId} has been removed.`;
+    return `User ID ${userId} has been removed.`;
 }
 
 

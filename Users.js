@@ -33,9 +33,8 @@ Users.create = async (connection, userFirstname, userLastname) => {
 /**
  * Autoriaus paieska pagal id ir viena papildoma parametra. 
  * @param {Object} connection Objektas, su kuriuo kvieciame duombazes mainpuliavimo metodus.
- * @param {number} authorId Autoriaus ID.
- * @param {string} propertyName Atnaujinamos savybes pavadinimas.
- * @param {string} propertyValue Atnaujinamos savybes verte.
+ * @param {number} userId vartotojo ID.
+ * @param {string} userLastname vartotojo pavarde.
  * @returns { Promise < string >} Tekstas, skelbiantis kokia savybe, pagal duota ID, buvo atnaujinta i kokia verte.
  */
 Users.updateSurnameById = async (connection, userId, userLastname) => {
@@ -53,6 +52,39 @@ Users.updateSurnameById = async (connection, userId, userLastname) => {
     return updatedSurnameById;
 }
 
+/**
+ * Autoriaus paieska pagal id ir viena papildoma parametra. 
+ * @param {Object} connection Objektas, su kuriuo kvieciame duombazes mainpuliavimo metodus.
+ * @param {number} userId vartotojo ID.
+ * @returns { Promise < string >} Tekstas, skelbiantis kokia savybe, pagal duota ID, buvo atnaujinta i kokia verte.
+ */
+Users.delete = async (connection, userId) => {
+    //VALIDATIONS
+    if (!Validation.IDisValid(userId)) {
+        return `Vartotojo ID turi buti teigiamas sveikasis skaicius!`;
+    }
+
+    const sql = 'SELECT `firstname`, `lastname`,\
+                        `accounts`.`balance`, `accounts`.`id` as accountId\
+                FROM `users`\
+                LEFT JOIN `accounts`\
+                    ON `accounts`.`userId` = `users`.`id`\
+                WHERE `users`.`id` =' + userId;
+    [rows] = await connection.execute(sql);
+
+    // tikrinam ar bent vienoje vartotojo saskaitoje yra pinigu
+    if (rows.some(row => row.balance > 0)) {
+        return `User ${userId} cant be deleted cause the balance is not 0.`
+    }
+
+    // jei saskaitos be likucio, tada trinam
+    for (let i = 0; i < rows.length; i++) {
+        let account = rows[i];
+        console.log(rows[i]);
+        const status = await Accounts.delete(connection, account.accountId);
+    }
+    return `User ${userId} has been removed.`;
+}
 
 
 module.exports = Users;

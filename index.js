@@ -73,6 +73,13 @@ app.init = async () => {
     //const delete3 = await Accounts.delete(conn, 8);
     //console.log(delete3);
 
+    console.log('');
+    const userdelete1 = await Users.delete(conn, 2);
+    console.log(userdelete1);
+    const userdelete2 = await Users.delete(conn, 6);
+    console.log(userdelete2);
+
+
 
 }
 

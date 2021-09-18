@@ -58,7 +58,7 @@ db.createTableAccounts = async (connection) => {
                         `id` int(10) NOT NULL AUTO_INCREMENT,\
                         PRIMARY KEY(`id`),\
                         `userId` INT(11) NOT NULL,\
-                        `balance` DECIMAL(12.2) NOT NULL\
+                        `balance` DECIMAL(12,2) NOT NULL\
                     ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
         await connection.execute(sql);
     } catch (error) {

@@ -20,8 +20,8 @@ Users.create = async (connection, userFirstname, userLastname) => {
     }
 
     const sql = 'INSERT INTO `users`\
-            (`id`, `firstname`, `lastname`)\
-                VALUES (NULL, "' + userFirstname + '", "' + userLastname + '")';
+                 (`id`, `firstname`, `lastname`)\
+                 VALUES (NULL, "' + userFirstname + '", "' + userLastname + '")';
     const [rows] = await connection.execute(sql);
     //console.log(rows);
     const holderId = rows.insertId;   // randam userId
@@ -46,7 +46,9 @@ Users.updateSurnameById = async (connection, userId, userLastname) => {
         return `Parametras turi buti ne tuscias tekstas!`;
     }
 
-    const sql = 'UPDATE users SET lastname = "' + userLastname + '" WHERE users.id =' + userId;
+    const sql = 'UPDATE users\
+                 SET lastname = "' + userLastname + '"\
+                 WHERE users.id =' + userId;
     [rows] = await connection.execute(sql);
     const updatedSurnameById = `User with ID ${userId} has a new surname now as "${userLastname}."`
     return updatedSurnameById;
@@ -65,11 +67,12 @@ Users.delete = async (connection, userId) => {
     }
 
     const sql = 'SELECT `firstname`, `lastname`,\
-                        `accounts`.`balance`, `accounts`.`id` as accountId\
+                        `accounts`.`balance`,\
+                        `accounts`.`id` as accountId\
                 FROM `users`\
                 LEFT JOIN `accounts`\
                     ON `accounts`.`userId` = `users`.`id`\
-                WHERE `users`.`id` =' + userId;
+                    WHERE `users`.`id` =' + userId;
     [rows] = await connection.execute(sql);
 
     // tikrinam ar bent vienoje vartotojo saskaitoje yra pinigu

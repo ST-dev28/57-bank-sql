@@ -9,23 +9,20 @@ const Accounts = {};
 * Vartotojo saskaitos sukurimas.
 * @param {Object} connection   Objektas, su kuriuo kvieciame duombazes mainpuliavimo metodus.
 * @param {number} userId vartotojo ID.
-* @param {number} balance saskaitos balansas.
 * @returns {Promise<string>} Tekstas nurodo vartotojo duomenis.
 */
-Accounts.create = async (connection, userId, balance) => {
+Accounts.create = async (connection, userId) => {
     //VALIDATIONS
     if (!Validation.IDisValid(userId)) {
         return `Vartotojo ID turi buti teigiamas sveikasis skaicius!`;
     }
-    if (!Validation.isValidAmount(balance)) {
-        return `* Parametras turi buti teigiamas sveikasis skaicius!`;
-    }
 
     const sql = 'INSERT INTO `accounts`\
-            (`id`, `userId`,`balance`)\
-                VALUES (NULL, "' + userId + '", "' + balance + '")';
-    [rows] = await connection.execute(sql);
-    return `Account created!`
+                (`id`, `userId`,`balance`)\
+                VALUES (NULL, "' + userId + '", "0")';
+    const [rows] = await connection.execute(sql);
+
+    return rows.affectedRows === 1 ? `Account created!` : `Account create failed unfortunately.`
 }
 
 /**
@@ -44,9 +41,22 @@ Accounts.addAmountById = async (connection, accountId, amount) => {
         return `** Parametras turi buti teigiamas sveikasis skaicius!`;
     }
 
-    const sql = 'UPDATE `accounts` SET `balance` = `balance` + "' + amount + '" WHERE `accounts`.`id` = ' + accountId;
-    [rows] = await connection.execute(sql);
-    return `Account balance has increased by value ${amount}.`;
+    //tikrinam, ar egzistuoja toks saskaitos numeris
+    let sql = 'SELECT `id`\
+               FROM accounts\
+               WHERE `id` = ' + accountId;
+    const [rows] = await connection.execute(sql);
+    if (rows.length === 0) {
+        console.log(`Neteisingas saskaitos numeris!`);
+        return false;
+    }
+
+    let sql1 = 'UPDATE `accounts`\
+                SET `balance` = `balance` + "' + amount + '"\
+                WHERE `id` = ' + accountId;
+    const [rows1] = await connection.execute(sql1);
+    console.log(`Account balance has increased by value ${amount}.`);
+    return true;
 }
 
 /**
@@ -64,10 +74,28 @@ Accounts.reduceAmountById = async (connection, accountId, amount) => {
     if (!Validation.isValidAmount(amount)) {
         return `*** Parametras turi buti teigiamas sveikasis skaicius!`;
     }
+    let sql = 'SELECT `balance`\
+               FROM `accounts`\
+               WHERE `id` =' + accountId;
 
-    const sql = 'UPDATE `accounts` SET `balance` = `balance` - "' + amount + '" WHERE `accounts`.`id` = ' + accountId;
-    [rows] = await connection.execute(sql);
-    return `Account balance has decreased by value ${amount}.`;
+    let [rows] = await connection.execute(sql);
+
+    if (rows[0].balance < amount) {
+        console.log(`Nepakankamas pinigu likutis saskaitoje!`);
+        return false;
+    }
+
+    const sql1 = 'UPDATE `accounts`\
+                  SET `balance` = `balance` - "' + amount + '"\
+                  WHERE `id` = ' + accountId;
+    const [rows1] = await connection.execute(sql1);
+
+    if (!!rows1.affectedRows) {
+        console.log(`Account balance has decreased by value ${amount}.`);
+    } else {
+        console.log(`Nepavyko nurasyti pinigu!`);
+    }
+    return !!rows1.affectedRows;
 }
 
 /**
@@ -90,21 +118,44 @@ Accounts.transfer = async (connection, fromAccountId, toAccountId, amount) => {
         return `**** Parametras turi buti teigiamas sveikasis skaicius!`;
     }
 
+    // tikrinam ar FROM saskaitoje pakankamas pinigu likutis
+    let sql = 'SELECT `balance`\
+               FROM `accounts`\
+               WHERE `id` =' + fromAccountId;
+
+    let [rows] = await connection.execute(sql);
+
+    if (rows[0].balance < amount) {
+        console.log(`Nepakankamas pinigu likutis saskaitoje!`);
+        return false;
+    }
+
+    //tikrinam, ar egzistuoja TO saskaitos numeris
+    let sql1 = 'SELECT `id`\
+                FROM accounts\
+                WHERE `id` = ' + toAccountId;
+    const [rows1] = await connection.execute(sql1);
+    if (rows1.length === 0) {
+        console.log(`Neteisingas saskaitos numeris!`);
+        return false;
+    }
+
+    // darom pinigu perlaida tarp saskaitu
     const from = 'UPDATE `accounts` SET\
-     `balance` = `balance` - "' + amount + '"\
-     WHERE `accounts`.`id` = ' + fromAccountId;
-    [rows1] = await connection.execute(from);
+                 `balance` = `balance` - "' + amount + '"\
+                  WHERE `accounts`.`id` = ' + fromAccountId;
+    [rows2] = await connection.execute(from);
 
     const to = 'UPDATE `accounts` SET\
      `balance` = `balance` + "' + amount + '"\
      WHERE `accounts`.`id` = ' + toAccountId;
-    [rows2] = await connection.execute(to);
+    [rows3] = await connection.execute(to);
 
     return `${amount} has been transferred.`;
 }
 
 /**
-* Saskaitos is trynimas.
+* Saskaitos istrynimas.
 * @param {Object} connection   Objektas, su kuriuo kvieciame duombazes mainpuliavimo metodus.
 * @param {number} accountId saskaitos ID.
 * @returns {Promise<string>} Tekstas nurodo vartotojo duomenis.
@@ -116,7 +167,7 @@ Accounts.delete = async (connection, accountId) => {
     }
 
     const sql = 'SELECT `balance` FROM `accounts`\
-                 WHERE `accounts`.`id` =' + accountId;
+                 WHERE `id` =' + accountId;
     const [rows] = await connection.execute(sql);
     const balance = rows[0].balance;
 
@@ -125,7 +176,7 @@ Accounts.delete = async (connection, accountId) => {
     }
     else {
         const sql1 = 'DELETE FROM `accounts`\
-                     WHERE `accounts`.`id` =' + accountId;
+                      WHERE `id` =' + accountId;
         const [rows1] = await connection.execute(sql1);
     }
     return `Account ID "${accountId}" has been removed.`;

@@ -33,37 +33,43 @@ app.init = async () => {
     console.log(userupdate1);
 
     console.log('');
-    const account1 = await Accounts.create(conn, 1, 100);
+    const account1 = await Accounts.create(conn, 1);
     console.log(account1);
-    const account2 = await Accounts.create(conn, 1, 800);
+    const account2 = await Accounts.create(conn, 1);
     console.log(account2);
-    const account3 = await Accounts.create(conn, 3, 1500);
+    const account3 = await Accounts.create(conn, 3);
     console.log(account3);
-    //const account4 = await Accounts.create(conn, 4, 500);
+    //const account4 = await Accounts.create(conn, 4);
     //console.log(account4);
-    //const account5 = await Accounts.create(conn, 5, 2000);
+    //const account5 = await Accounts.create(conn, 5);
     //console.log(account5);
 
 
     console.log('');
     const add1 = await Accounts.addAmountById(conn, 1, 500);
     console.log(add1);
-    const add2 = await Accounts.addAmountById(conn, 3, 1000);
-    console.log(add2);
-    const add3 = await Accounts.addAmountById(conn, 6, 5000);
-    console.log(add3);
+    //const add2 = await Accounts.addAmountById(conn, 3, 1000);
+    //console.log(add2);
+    //const add3 = await Accounts.addAmountById(conn, 6, 5000);
+    //console.log(add3);
+    //const add4 = await Accounts.addAmountById(conn, 55, 5000);
+    //console.log(add4);
 
     console.log('');
     const reduce1 = await Accounts.reduceAmountById(conn, 1, 100);
     console.log(reduce1);
-    const reduce2 = await Accounts.reduceAmountById(conn, 3, 300);
-    console.log(reduce2);
+    //const reduce2 = await Accounts.reduceAmountById(conn, 3, 100);
+    //console.log(reduce2);
 
     console.log('');
-    const transfer1 = await Accounts.transfer(conn, 9, 1, 500);
-    console.log(transfer1);
-    const transfer2 = await Accounts.transfer(conn, 1, 7, 200);
-    console.log(transfer2);
+    //const transfer1 = await Accounts.transfer(conn, 9, 1, 500);
+    //console.log(transfer1);
+    //const transfer2 = await Accounts.transfer(conn, 1, 9, 200);
+    //console.log(transfer2);
+    const transfer3 = await Accounts.transfer(conn, 1, 7, 300);
+    console.log(transfer3);
+    const transfer4 = await Accounts.transfer(conn, 7, 9, 100);
+    console.log(transfer4);
 
     console.log('');
     const delete1 = await Accounts.delete(conn, 4);

@@ -17,9 +17,9 @@ Accounts.create = async (connection, userId, balance) => {
     if (!Validation.IDisValid(userId)) {
         return `Vartotojo ID turi buti teigiamas sveikasis skaicius!`;
     }
-    /*if (!Validation.isValidBalance(balance)) {
-        return `Balansas negali buti mazesnis uz nustatyta limita!`;
-    }*/
+    if (!Validation.isValidAmount(balance)) {
+        return `* Parametras turi buti teigiamas sveikasis skaicius!`;
+    }
 
     const sql = 'INSERT INTO `accounts`\
             (`id`, `userId`,`balance`)\
@@ -40,6 +40,9 @@ Accounts.addAmountById = async (connection, accountId, amount) => {
     if (!Validation.IDisValid(accountId)) {
         return `Saskaitos ID turi buti teigiamas sveikasis skaicius!`;
     }
+    if (!Validation.isValidAmount(amount)) {
+        return `** Parametras turi buti teigiamas sveikasis skaicius!`;
+    }
 
     const sql = 'UPDATE `accounts` SET `balance` = `balance` + "' + amount + '" WHERE `accounts`.`id` = ' + accountId;
     [rows] = await connection.execute(sql);
@@ -58,6 +61,9 @@ Accounts.reduceAmountById = async (connection, accountId, amount) => {
     if (!Validation.IDisValid(accountId)) {
         return `Saskaitos ID turi buti teigiamas sveikasis skaicius!`;
     }
+    if (!Validation.isValidAmount(amount)) {
+        return `*** Parametras turi buti teigiamas sveikasis skaicius!`;
+    }
 
     const sql = 'UPDATE `accounts` SET `balance` = `balance` - "' + amount + '" WHERE `accounts`.`id` = ' + accountId;
     [rows] = await connection.execute(sql);
@@ -74,6 +80,15 @@ Accounts.reduceAmountById = async (connection, accountId, amount) => {
 */
 Accounts.transfer = async (connection, fromAccountId, toAccountId, amount) => {
     //VALIDATIONS
+    if (!Validation.IDisValid(fromAccountId)) {
+        return `Saskaitos ID turi buti teigiamas sveikasis skaicius!`;
+    }
+    if (!Validation.IDisValid(toAccountId)) {
+        return `Saskaitos ID turi buti teigiamas sveikasis skaicius!`;
+    }
+    if (!Validation.isValidAmount(amount)) {
+        return `**** Parametras turi buti teigiamas sveikasis skaicius!`;
+    }
 
     const from = 'UPDATE `accounts` SET\
      `balance` = `balance` - "' + amount + '"\

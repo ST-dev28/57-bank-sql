@@ -61,6 +61,10 @@ db.createTableAccounts = async (connection) => {
                         `balance` DECIMAL(12,2) NOT NULL\
                     ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
         await connection.execute(sql);
+        // apsauga nuo istrynimo
+        const sql2 = 'ALTER TABLE `accounts` ADD FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;'
+        await connection.execute(sql2);
+
     } catch (error) {
         console.log('Nepavyko sukurti saskaitu lenteles');
         console.log(error);

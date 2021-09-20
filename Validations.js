@@ -59,7 +59,6 @@ class Validation {
 
         if (typeof param !== 'number' ||
             !isFinite(param) ||
-            param !== 0 ||
             param < 0) {
             return false
         }

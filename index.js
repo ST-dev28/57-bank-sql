@@ -1,6 +1,7 @@
 const db = require('./db');
 const Users = require('./Users');
 const Accounts = require('./Accounts');
+const History = require('./History');
 
 const app = {}
 
@@ -35,23 +36,23 @@ app.init = async () => {
     console.log('');
     const account1 = await Accounts.create(conn, 1);
     console.log(account1);
-    const account2 = await Accounts.create(conn, 1);
+    const account2 = await Accounts.create(conn, 2);
     console.log(account2);
     const account3 = await Accounts.create(conn, 3);
     console.log(account3);
-    //const account4 = await Accounts.create(conn, 4);
-    //console.log(account4);
-    //const account5 = await Accounts.create(conn, 5);
-    //console.log(account5);
+    const account4 = await Accounts.create(conn, 4);
+    console.log(account4);
+    const account5 = await Accounts.create(conn, 5);
+    console.log(account5);
 
 
     console.log('');
     const add1 = await Accounts.addAmountById(conn, 1, 500);
     console.log(add1);
-    //const add2 = await Accounts.addAmountById(conn, 3, 1000);
-    //console.log(add2);
-    //const add3 = await Accounts.addAmountById(conn, 6, 5000);
-    //console.log(add3);
+    const add2 = await Accounts.addAmountById(conn, 2, 1000);
+    console.log(add2);
+    const add3 = await Accounts.addAmountById(conn, 5, 5000);
+    console.log(add3);
     //const add4 = await Accounts.addAmountById(conn, 55, 5000);
     //console.log(add4);
 
@@ -72,21 +73,24 @@ app.init = async () => {
     console.log(transfer4);
 
     console.log('');
-    const delete1 = await Accounts.delete(conn, 4);
-    console.log(delete1);
-    const delete2 = await Accounts.delete(conn, 1);
-    console.log(delete2);
-    const delete3 = await Accounts.delete(conn, 8);
-    console.log(delete3);
+    //const delete1 = await Accounts.delete(conn, 4);
+    //console.log(delete1);
+    //const delete2 = await Accounts.delete(conn, 1);
+    //console.log(delete2);
+    //const delete3 = await Accounts.delete(conn, 8);
+    //console.log(delete3);
 
     console.log('');
-    const userdelete1 = await Users.delete(conn, 2);
-    console.log(userdelete1);
-    const userdelete2 = await Users.delete(conn, 6);
-    console.log(userdelete2);
-    const userdelete3 = await Users.delete(conn, 5);
-    console.log(userdelete3);
+    //const userdelete1 = await Users.delete(conn, 2);
+    //console.log(userdelete1);
+    //const userdelete2 = await Users.delete(conn, 6);
+    //console.log(userdelete2);
+    //const userdelete3 = await Users.delete(conn, 5);
+    //console.log(userdelete3);
 
+    console.log('');
+    await History.dbReadingLog(conn);
+    //console.log(history);
 
 
 }

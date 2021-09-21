@@ -43,6 +43,7 @@ db.createTableUsers = async (connection) => {
                         `id` int(10) NOT NULL AUTO_INCREMENT,\
                         `firstname` char(20) COLLATE utf8_swedish_ci NOT NULL,\
                         `lastname` char(20) COLLATE utf8_swedish_ci NOT NULL,\
+                        `status` CHAR(10) NOT NULL,\
                         PRIMARY KEY(`id`)\
                     ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
         await connection.execute(sql);
@@ -59,7 +60,8 @@ db.createTableAccounts = async (connection) => {
                         `id` int(10) NOT NULL AUTO_INCREMENT,\
                         PRIMARY KEY(`id`),\
                         `userId` INT(10) NOT NULL,\
-                        `balance` DECIMAL(12,2) NOT NULL\
+                        `balance` DECIMAL(12,2) NOT NULL,\
+                        `transaction_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP\
                     ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
         await connection.execute(sql);
         // apsauga nuo istrynimo

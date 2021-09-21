@@ -1,5 +1,6 @@
 const Validation = require('./Validations');
 const Accounts = require('./Accounts');
+const History = require('./History');
 const Users = {};
 
 /**

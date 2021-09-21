@@ -106,7 +106,7 @@ Accounts.reduceAmountById = async (connection, accountId, amount) => {
 * @param {number} amount inesama suma.
 * @returns {Promise<string>} Tekstas nurodo vartotojo duomenis.
 */
-Accounts.transfer = async (connection, fromAccountId, toAccountId, amount) => {
+Accounts.transfer = async (connection, fromAccountId, toAccountId, amount, date) => {
     //VALIDATIONS
     if (!Validation.IDisValid(fromAccountId)) {
         return `Saskaitos ID turi buti teigiamas sveikasis skaicius!`;

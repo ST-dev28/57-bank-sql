@@ -7,6 +7,7 @@ db.init = async ({ database, host, user }) => {
 
     await db.createTableUsers(connection);
     await db.createTableAccounts(connection);
+    await db.createTableHistory(connection);
 
     return connection;
 }
@@ -57,7 +58,7 @@ db.createTableAccounts = async (connection) => {
         const sql = 'CREATE TABLE IF NOT EXISTS `accounts` (\
                         `id` int(10) NOT NULL AUTO_INCREMENT,\
                         PRIMARY KEY(`id`),\
-                        `userId` INT(11) NOT NULL,\
+                        `userId` INT(10) NOT NULL,\
                         `balance` DECIMAL(12,2) NOT NULL\
                     ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
         await connection.execute(sql);
@@ -67,6 +68,29 @@ db.createTableAccounts = async (connection) => {
 
     } catch (error) {
         console.log('Nepavyko sukurti saskaitu lenteles');
+        console.log(error);
+        return error;
+    }
+}
+
+db.createTableHistory = async (connection) => {
+    try {
+        const sql = 'CREATE TABLE IF NOT EXISTS `history` (\
+                        `id` int(10) NOT NULL AUTO_INCREMENT,\
+                        PRIMARY KEY(`id`),\
+                        `userId` INT(10) NOT NULL,\
+                        `accountId` INT(10) NOT NULL,\
+                        `in` DECIMAL(12,2) NOT NULL,\
+                        `out` DECIMAL(12,2) NOT NULL,\
+                        `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP\
+                    ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
+        await connection.execute(sql);
+        // apsauga nuo istrynimo
+        //const sql2 = 'ALTER TABLE `accounts` ADD FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;'
+        //await connection.execute(sql2);
+
+    } catch (error) {
+        console.log('Nepavyko sukurti istorijos lenteles');
         console.log(error);
         return error;
     }

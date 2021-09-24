@@ -2,6 +2,7 @@ const db = require('./db');
 const Users = require('./Users');
 const Accounts = require('./Accounts');
 const History = require('./History');
+const Transactions = require('./Transactions');
 
 const app = {}
 
@@ -34,6 +35,10 @@ app.init = async () => {
     console.log(userupdate1);
 
     console.log('');
+    //const listAll = await History.listAll(conn);
+    //console.log(listAll);
+
+    console.log('');
     const account1 = await Accounts.create(conn, 1);
     console.log(account1);
     const account2 = await Accounts.create(conn, 2);
@@ -63,33 +68,33 @@ app.init = async () => {
     //console.log(reduce2);
 
     console.log('');
-    //const transfer1 = await Accounts.transfer(conn, 9, 1, 500);
-    //console.log(transfer1);
+    const transfer1 = await Accounts.transfer(conn, 9, 1, 500);
+    console.log(transfer1);
     //const transfer2 = await Accounts.transfer(conn, 1, 9, 200);
     //console.log(transfer2);
-    const transfer3 = await Accounts.transfer(conn, 1, 7, 300);
-    console.log(transfer3);
-    const transfer4 = await Accounts.transfer(conn, 7, 9, 100);
-    console.log(transfer4);
+    //const transfer3 = await Accounts.transfer(conn, 1, 7, 300);
+    //console.log(transfer3);
+    //const transfer4 = await Accounts.transfer(conn, 7, 9, 100);
+    //console.log(transfer4);
 
     console.log('');
-    //const delete1 = await Accounts.delete(conn, 4);
-    //console.log(delete1);
+    const delete1 = await Accounts.delete(conn, 6);
+    console.log(delete1);
     //const delete2 = await Accounts.delete(conn, 1);
     //console.log(delete2);
     //const delete3 = await Accounts.delete(conn, 8);
     //console.log(delete3);
 
     console.log('');
-    //const userdelete1 = await Users.delete(conn, 2);
-    //console.log(userdelete1);
+    const userdelete1 = await Users.delete(conn, 2);
+    console.log(userdelete1);
     //const userdelete2 = await Users.delete(conn, 6);
     //console.log(userdelete2);
     //const userdelete3 = await Users.delete(conn, 5);
     //console.log(userdelete3);
 
     console.log('');
-    await History.dbReadingLog(conn);
+    //await History.dbReadingLog(conn);
     //console.log(history);
 
 

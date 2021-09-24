@@ -21,11 +21,15 @@ Users.create = async (connection, userFirstname, userLastname) => {
     }
 
     const sql = 'INSERT INTO `users`\
-                 (`id`, `firstname`, `lastname`)\
-                 VALUES (NULL, "' + userFirstname + '", "' + userLastname + '")';
+                 (`id`, `firstname`, `lastname`, `active`)\
+                 VALUES (NULL, "' + userFirstname + '", "' + userLastname + '", "TRUE")';
     const [rows] = await connection.execute(sql);
     //console.log(rows);
     const holderId = rows.insertId;   // randam userId
+
+    //registruojam i istorija vartotojo sukurima
+    await History.create(connection, 1, null, holderId, null);
+
     const account = await Accounts.create(connection, holderId, 0);  // userId perduodamas i accounts lentele
     const resp = account;
     return resp;
@@ -107,16 +111,26 @@ Users.delete = async (connection, userId) => {
     const { firstname, lastname } = rows[0];
 
     // tikrinam ar bent vienoje vartotojo saskaitoje yra pinigu
+    if (rows.some(row => row.balance > 0)) {
+        return `User cant be removed as account is not empty!`
+    }
 
     for (let { accountId } of rows) {
         const status = await Accounts.delete(connection, accountId);
 
         // jei saskaitos be likucio, tada trinam
-        let sql1 = 'DELETE\
+        /*let sql1 = 'DELETE\
             FROM `users`\
-            WHERE `users`.`id` =' + userId;
+            WHERE `users`.`id` =' + userId;*/
+
+        // jei saskaitos be likucio, deaktyvuojam vartotoja
+        let sql1 = 'UPDATE `users` SET `active` = "FALSE" WHERE `users`.`id` =' + userId;
         [rows1] = await connection.execute(sql1);
-        return `User ${firstname} ${lastname} ID ${userId} has been removed!`
+
+        //fiksuojam vartotojo pasalinima istorijoje
+        await History.create(connection, 7, null, userId, null);
+
+        return `User ${firstname} ${lastname} ID ${userId} has been freezed!`
     }
 }
 module.exports = Users;

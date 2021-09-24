@@ -1,18 +1,26 @@
-const Validation = require('./Validations');
-const Accounts = require('./Accounts');
-const Users = require('./Users');
-const History = {};
+const helpers = require('./helpers');
+const History = {}
 
-History.dbReadingLog = async (connection, userId, accountId, income, outcome, date) => {
-
-    const sql1 = 'INSERT INTO `history`\
-                 (`id`, `userId`, `accountId`, `in`, `out`, `date`)\
-                 VALUES (NULL, "' + userId + '", "' + accountId + '", "' + income + '", "' + outcome + '", "' + date + '")';
-
-    const [rows1] = await connection.execute(sql1);
-    console.log(rows1);
-
+/**
+ * Tranzakciju irasymas i duombaze.
+ * @param {Object} connection Objektas, su kuriuo kvieciame duombazes manipuliavimo metodus.
+ * @param {number} transactionId Atliktos operacijos pavadinimas, jei neduodam irasom null.
+ * @param {number} accountId Saskaitos ID, jei neduodam irasom null.
+ * @param {number} userId Vartotojo ID, jei neduodam irasom null.
+ * @param {number} amount Pinigu suma atliekant operaciaj,jei neduodam irasom null.
+ * @returns {Promise<string>} Tekstinis pranesimas pranesanti apie atlikta operacija, irasyma i duomenu baze.
+ */
+History.create = async (connection, transactionId, accountId, userId, amount) => {
+    sql = 'INSERT INTO `history`\
+     (`id`, `transactionId`, \
+        `accountId`, \
+        `userId`, \
+        `amount`, \
+        `date`\
+        ) VALUES \
+        (NULL, "'+ transactionId + '", "' + accountId + '", "' + userId + '", "' + amount + '", current_timestamp())';
+    await connection.execute(sql);
+    return `Transactions has been created!`
 }
-
 
 module.exports = History;

@@ -67,7 +67,11 @@ db.createTableAccounts = async (connection) => {
                     ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
         await connection.execute(sql);
         // apsauga nuo istrynimo
-        const sql1 = 'ALTER TABLE `accounts` ADD FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;'
+        const sql1 = 'ALTER TABLE `accounts`\
+                     ADD FOREIGN KEY (`userId`)\
+                         REFERENCES `users`(`id`)\
+                            ON DELETE RESTRICT\
+                            ON UPDATE RESTRICT;'
         await connection.execute(sql1);
 
     } catch (error) {

@@ -133,7 +133,7 @@ Accounts.reduceAmountById = async (connection, accountId, amount) => {
 * @param {number} amount inesama suma.
 * @returns {Promise<string>} Tekstas nurodo vartotojo duomenis.
 */
-Accounts.transfer = async (connection, fromAccountId, toAccountId, amount, date) => {
+Accounts.transfer = async (connection, fromAccountId, toAccountId, amount) => {
     //VALIDATIONS
     if (!Validation.IDisValid(fromAccountId)) {
         return `Saskaitos ID turi buti teigiamas sveikasis skaicius!`;
@@ -150,7 +150,7 @@ Accounts.transfer = async (connection, fromAccountId, toAccountId, amount, date)
                FROM `accounts`\
                WHERE `id` =' + fromAccountId;
 
-    let [rows] = await connection.execute(sql);
+    const [rows] = await connection.execute(sql);
 
     if (rows[0].balance < amount) {
         console.log(`Nepakankamas pinigu likutis saskaitoje!`);
@@ -174,7 +174,7 @@ Accounts.transfer = async (connection, fromAccountId, toAccountId, amount, date)
     [rows2] = await connection.execute(from);
 
     //irasom i istorijs pinigu isemino transakcija
-    await History.create(connection, 4, fromAccountId, userId, amount);
+    await History.create(connection, 4, fromAccountId, null, amount);
 
     const to = 'UPDATE `accounts` SET\
      `balance` = `balance` + "' + amount + '"\
@@ -182,7 +182,7 @@ Accounts.transfer = async (connection, fromAccountId, toAccountId, amount, date)
     [rows3] = await connection.execute(to);
 
     //irasom i istorijs pinigu inesimo transakcija
-    await History.create(connection, 3, toAccountId, userId, amount);
+    await History.create(connection, 3, toAccountId, null, amount);
 
     return `${amount} has been transferred.`;
 }

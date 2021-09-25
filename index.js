@@ -70,8 +70,8 @@ app.init = async () => {
     console.log('');
     const transfer1 = await Accounts.transfer(conn, 5, 4, 500);
     console.log(transfer1);
-    //const transfer2 = await Accounts.transfer(conn, 1, 9, 200);
-    //console.log(transfer2);
+    const transfer2 = await Accounts.transfer(conn, 2, 8, 250);
+    console.log(transfer2);
     //const transfer3 = await Accounts.transfer(conn, 1, 7, 300);
     //console.log(transfer3);
     //const transfer4 = await Accounts.transfer(conn, 7, 9, 100);

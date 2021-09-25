@@ -60,10 +60,11 @@ Accounts.addAmountById = async (connection, accountId, amount) => {
     }
 
     //tikrinam, ar egzistuoja toks saskaitos numeris
-    let sql = 'SELECT `id`\
+    let sql = 'SELECT `id`, `userId`\
                FROM accounts\
                WHERE `id` = ' + accountId;
     const [rows] = await connection.execute(sql);
+
     if (rows.length === 0) {
         console.log(`Neteisingas saskaitos numeris!`);
         return false;
@@ -77,7 +78,7 @@ Accounts.addAmountById = async (connection, accountId, amount) => {
     //itraukiam i istorija pinigu inesima
     await History.create(connection, 3, accountId, null, amount);
 
-    console.log(`Account balance has increased by value ${amount}.`);
+    console.log(`Account ${accountId} balance has increased by value ${amount}.`);
     return true;
 }
 
@@ -118,7 +119,7 @@ Accounts.reduceAmountById = async (connection, accountId, amount) => {
     await History.create(connection, 4, accountId, null, amount);
 
     if (!!rows1.affectedRows) {
-        console.log(`Account balance has decreased by value ${amount}.`);
+        console.log(`Account balance ${accountId} has decreased by value ${amount}.`);
     } else {
         console.log(`Nepavyko nurasyti pinigu!`);
     }

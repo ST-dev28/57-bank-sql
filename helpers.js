@@ -13,12 +13,18 @@ helpers.formatTime = async (time) => {
     const t = new Date(time);
     const tformat = [d.getHours(), d.getMinutes() + 1, d.getSeconds()].join(':');
     return tformat;
-}*/
+}
 
 helpers.fullDate = async (date) => {
     const dt = new Date(date);
     const fullDate = ([dt.getFullYear(), dt.getMonth() + 1, dt.getDate()].join('-')) + ' ' + ([dt.getHours(), dt.getMinutes() + 1, dt.getSeconds()].join(':'));
     return fullDate;
+}*/
+
+helpers.fullDate = async (date) => {
+    const dt = new Date(date);
+    return dt.toLocaleString();
 }
+
 
 module.exports = helpers;

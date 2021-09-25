@@ -39,10 +39,6 @@ app.init = async () => {
     console.log(activeacc);
 
     console.log('');
-    const listAll = await History.allTransactions(conn);
-    console.log(listAll);
-
-    console.log('');
     const account1 = await Accounts.create(conn, 1);
     console.log(account1);
     const account2 = await Accounts.create(conn, 2);
@@ -98,9 +94,12 @@ app.init = async () => {
     //console.log(userdelete3);
 
     console.log('');
-    //await History.dbReadingLog(conn);
-    //console.log(history);
+    const listAll = await History.allTransactions(conn);
+    //console.log(listAll);
 
+    console.log('');
+    const history = await History.allTransactions(conn);
+    console.log(history);
 
 }
 

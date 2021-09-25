@@ -24,28 +24,29 @@ History.create = async (connection, transactionId, accountId, userId, amount) =>
 }
 
 History.allTransactions = async (connection) => {
-    sql = 'SELECT `history`.`transactionId`,\
+    sql = 'SELECT `history`.`id`,\
+            `history`.`transactionId`,\
             `history`.`accountId`,\
+            `history`.`userId`,\
             `transactions`.`transaction`,\
             `users`.`firstname`,\
             `users`.`lastname`,\
             `date`\
-            FROM `users`\
+            FROM `history`\
+        LEFT JOIN `users`\
+            ON `users`.`id` = `history`.`userId`\
         LEFT JOIN `accounts`\
-            ON `users`.`id` = `accounts`.`userId`\
-        LEFT JOIN `history`\
             ON `accounts`.`id` = `history`.`accountId`\
         LEFT JOIN `transactions`\
             ON `transactions`.`id` = `history`.`transactionId`';
     const [list] = await connection.execute(sql);
-    //console.log(list);
     let count = 0;
     let transactionsList = [];
     for (let { transaction, lastname, firstname, date, accountId } of list) {
-        transactionsList.push(`${++count}. Transaction - "${transaction}", user - ${firstname} ${lastname}, account number - ${accountId} \ntransaction date - ${await helpers.fullDate(date)}. Successful!`);
+        transactionsList.push(`${++count}. Transaction "${transaction}": ${firstname} ${lastname}, account ${accountId} \non date - ${await helpers.fullDate(date)}. Successful!`);
     }
     const resp = transactionsList.join('\n');
-    return await resp;
+    return resp;
 }
 
 module.exports = History;

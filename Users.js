@@ -128,7 +128,7 @@ Users.delete = async (connection, userId) => {
         [rows1] = await connection.execute(sql1);
 
         //fiksuojam vartotojo pasalinima istorijoje
-        await History.create(connection, 7, null, userId, null);
+        await History.create(connection, 6, null, userId, null);
 
         return `User ${firstname} ${lastname} ID ${userId} has been freezed!`
     }
